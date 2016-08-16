@@ -1,0 +1,43 @@
+#!/bin/bash
+S_EXEC=$(basename $0)
+
+#echo "Called by $S_EXEC";
+
+case $S_EXEC in
+  *"pecc"      ) COMP=$PE_CC;;
+  *"pec++"     ) COMP=$PE_CXX;;
+  *"pefortran" ) COMP=$PE_FORTRAN;;
+esac
+
+if [ "$1" == "--pe-verbose" ]; then
+  pe_verbose=1
+  shift
+fi
+
+PACKAGES=$(echo $PE_PKGCONFIG_LIBS | tr ":" " ")
+if [ ! -z "$PACKAGES" -a "$PAKCAGES" != " " ]; then
+  if [ $pe_verbose ]; then
+    echo "$S_EXEC: $COMP -Wl,--as-needed \"$@\" `pkg-config --cflags --libs $PACKAGES`"
+  fi
+  $COMP $PE_PRE_FLAGS -Wl,--as-needed "$@" \
+        `pkg-config --cflags --libs $PACKAGES` $PE_POST_FLAGS
+else
+  if [ $pe_verbose ]; then
+    echo "$S_EXEC: $COMP $@"
+  fi
+  $COMP $PE_PRE_FLAGS "$@" $PE_POST_FLAGS
+fi
+
+#if [ -e "conftest.c" ]; then
+#  echo "COPYING 1 $PWD"
+#  ls -lah conftest.c
+#  echo "cp conftest.c ${PWD}/mytest.c.bak"
+#  cp conftest.c ${PWD}/mytest.c.bak
+#fi;
+#
+#if [ -e "conftest" ]; then
+#  echo "COPYING 2 $PWD"
+#  ls -lah conftest
+#  echo "cp conftest ${PWD}/mytest.exe.bak"
+#  cp conftest ${PWD}/mytest.exe.bak
+#fi;
