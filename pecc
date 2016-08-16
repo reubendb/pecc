@@ -1,8 +1,6 @@
 #!/bin/bash
 S_EXEC=$(basename $0)
 
-#echo "Called by $S_EXEC";
-
 case $S_EXEC in
   *"pecc"      ) COMP=$PE_CC;;
   *"pec++"     ) COMP=$PE_CXX;;
@@ -28,16 +26,3 @@ else
   $COMP $PE_PRE_FLAGS "$@" $PE_POST_FLAGS
 fi
 
-#if [ -e "conftest.c" ]; then
-#  echo "COPYING 1 $PWD"
-#  ls -lah conftest.c
-#  echo "cp conftest.c ${PWD}/mytest.c.bak"
-#  cp conftest.c ${PWD}/mytest.c.bak
-#fi;
-#
-#if [ -e "conftest" ]; then
-#  echo "COPYING 2 $PWD"
-#  ls -lah conftest
-#  echo "cp conftest ${PWD}/mytest.exe.bak"
-#  cp conftest ${PWD}/mytest.exe.bak
-#fi;
