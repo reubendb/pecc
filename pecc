@@ -13,16 +13,28 @@ if [ "$1" == "--pe-verbose" ]; then
 fi
 
 PACKAGES=$(echo $PE_PKGCONFIG_LIBS | tr ":" " ")
+
 if [ ! -z "$PACKAGES" -a "$PAKCAGES" != " " ]; then
+
+  if [[ -n $PE_ADD_RPATH \
+        && ( $PE_ADD_RPATH == "Y" || $PE_ADD_RPATH == "1" ) ]] ; then
+    rpath=$(pkg-config --libs-only-L --static $PACKAGES \
+            | sed 's/-L/-Wl,-rpath=/g')
+  fi
+  
   if [ $pe_verbose ]; then
-    echo "$S_EXEC: $COMP -Wl,--as-needed \"$@\" `pkg-config --cflags --libs $PACKAGES`"
+    echo "$S_EXEC: \
+    $COMP $PE_PRE_FLAGS -Wl,--as-needed "$@" \
+        `pkg-config --cflags --libs $PACKAGES` $rpath $PE_POST_FLAGS" 
   fi
   $COMP $PE_PRE_FLAGS -Wl,--as-needed "$@" \
-        `pkg-config --cflags --libs $PACKAGES` $PE_POST_FLAGS
+        `pkg-config --cflags --libs $PACKAGES` $rpath $PE_POST_FLAGS 
+
 else
+
   if [ $pe_verbose ]; then
     echo "$S_EXEC: $COMP $@"
   fi
   $COMP $PE_PRE_FLAGS "$@" $PE_POST_FLAGS
-fi
 
+fi
