@@ -51,3 +51,9 @@ Libs.private: -lpthreads
 ```
 In this file we include both the douple precision,single precision, threading, and MPI libraries in a single link line to make it easier for users. Overlinking is avoided because `pecc` by default added `--as-needed` flag to the linker. But of course system administrator can choose how to customize or split the FFTW package into multiple versions (for example, it is conceivable to have separate `fftw`, `fftw-threaded`, `fftw-mpi` modules instead). 
 
+### Environment Variables
+`PE_CC`, `PE_CXX`, and `PE_FORTRAN` need to be set to the actual back-end C, C++, and Fortran compilers, respectively. Typically this is the MPI compiler wrappers (e.g. `mpicc`, `mpic++`, `mpif90` or `mpifort`) for MPI environment, or just the real compilers (e.g. `gcc`, `g++`, or `gfortran` for the GNU compilers)
+
+`PE_ADD_RPATH`: Setting this environment variable to `1` or `Y` will add the `-rpath` option to the linker for every library locations provided by packages (i.e. modulefiles). This remove the need to re-load the modulefile or set `LD_LIBRARY_PATH` during runtime.
+
+`PE_PRE_FLAGS` and `PE_POST_FLAGS` can be set to insert arbitrary flags at the beginning and at the end of the compile line.
